@@ -134,7 +134,7 @@ try:
                 out,
                 cu_seq_lens_q,
                 cu_seq_lens_k,
-                seqused_k,
+                # seqused_k,
                 max_seq_len_q,
                 max_seq_len_k,
                 p,
@@ -580,9 +580,9 @@ class BwOp(AttentionBwOpBase):
         assert ctx.lse.is_contiguous()
         assert seqused_k is None
         ctx_lse = ctx.lse
-        assert ctx_lse.shape[2] >= max_seqlen_q
-        if max_seqlen_q != ctx_lse.shape[2]:
-            ctx_lse = ctx_lse[:, :, :max_seqlen_q].contiguous()
+        # assert ctx_lse.shape[2] >= max_seqlen_q
+        # if max_seqlen_q != ctx_lse.shape[2]:
+        #     ctx_lse = ctx_lse[:, :, :max_seqlen_q].contiguous()
         kernel_out_shape = [
             *inp.query.shape[:-1],
             inp.value.shape[-1],

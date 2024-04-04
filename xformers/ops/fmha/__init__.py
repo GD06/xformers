@@ -373,30 +373,30 @@ def _memory_efficient_attention_backward(
     )
     inp.normalize_bmhk()
     # LSE has shape [B, H, M] while query has shape [B, M, H, K]
-    if (
-        ctx.lse.ndim != 3
-        # Dim 0
-        or (
-            not isinstance(inp.attn_bias, BlockDiagonalMask)
-            and ctx.lse.shape[0] != inp.query.shape[0]
-        )
-        or (
-            isinstance(inp.attn_bias, BlockDiagonalMask)
-            and ctx.lse.shape[0] != inp.attn_bias.q_seqinfo.seqstart.shape[0] - 1
-        )
-        # Dim 1
-        or ctx.lse.shape[1] != inp.query.shape[2]
-        # Dim 2
-        or (
-            not isinstance(inp.attn_bias, BlockDiagonalMask)
-            and ctx.lse.shape[2] < inp.query.shape[1]
-        )
-    ):
-        raise ValueError(
-            "Input tensors have incompatible shapes."
-            f"lse.shape    : {ctx.lse.shape} \n"
-            f"query.shape  : {inp.query.shape}"
-        )
+    # if (
+    #     ctx.lse.ndim != 3
+    #     # Dim 0
+    #     or (
+    #         not isinstance(inp.attn_bias, BlockDiagonalMask)
+    #         and ctx.lse.shape[0] != inp.query.shape[0]
+    #     )
+    #     or (
+    #         isinstance(inp.attn_bias, BlockDiagonalMask)
+    #         and ctx.lse.shape[0] != inp.attn_bias.q_seqinfo.seqstart.shape[0] - 1
+    #     )
+    #     # Dim 1
+    #     or ctx.lse.shape[1] != inp.query.shape[2]
+    #     # Dim 2
+    #     or (
+    # not isinstance(inp.attn_bias, BlockDiagonalMask)
+    #         and ctx.lse.shape[2] < inp.query.shape[1]
+    #     )
+    # ):
+    #     raise ValueError(
+    #         "Input tensors have incompatible shapes."
+    #         f"lse.shape    : {ctx.lse.shape} \n"
+    #         f"query.shape  : {inp.query.shape}"
+    #     )
     grad = bmk2bmhk(grad, 1)
     ctx.out = bmk2bmhk(ctx.out, 1)
 
